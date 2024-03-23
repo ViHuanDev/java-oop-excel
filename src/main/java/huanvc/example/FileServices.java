@@ -14,9 +14,12 @@ import huanvc.example.ExcelService;
 
 public class FileServices {
     public String currentFileChosen = "";
+    public String currentPath = new java.io.File(".").getCanonicalPath() + "/src";
+
+    public FileServices() throws IOException {
+    }
 
     public void FileChooser() throws IOException {
-        String currentPath = new java.io.File(".").getCanonicalPath() + "/src";
         System.out.println("Current dir:" + currentPath);
 
         FileDialog dialog = new FileDialog((Frame) null, "Select File to Open");
@@ -43,11 +46,17 @@ public class FileServices {
         System.out.println("File menu chosen:");
         Scanner sc = new Scanner(System.in);
         System.out.println("1. Chose File");
-        System.out.println("2. Read");
-        System.out.println("3. Update");
-        System.out.println("4. Delete");
-        System.out.println("5. Add");
-        System.out.println("6. Close");
+        if (currentFileChosen != "") {
+            System.out.println("2. Read");
+            System.out.println("3. Update");
+            System.out.println("4. Delete");
+            System.out.println("5. Add");
+            // 1 export data from DB
+            // 2 export data from file
+            // 3 export data from inputs
+        }
+        System.out.println("6. Export");
+        System.out.println("7. Close");
         int a = Integer.parseInt(sc.nextLine());
         ChoseAction(a);
     }
@@ -61,7 +70,9 @@ public class FileServices {
                 break;
             case 2:
                 System.out.println("File Reader." + currentFileChosen);
-                showDataReadFromFile();
+                if (currentFileChosen != "") {
+                    showDataReadFromFile();
+                }
                 ListMenu();
                 break;
             case 3:
@@ -94,6 +105,12 @@ public class FileServices {
                 ListMenu();
                 break;
             case 6:
+                System.out.println("Input data before export");
+                ArrayList<ExcelModel> listData = inputFormKeyboard();
+                exportDataFromDB(listData);
+                ListMenu();
+                break;
+            case 7:
                 System.out.println("Service closed.");
                 break;
             default:
@@ -187,6 +204,30 @@ public class FileServices {
         model.setCount(count);
         model.setProportion(proportion);
         return model;
+    }
+
+    public ArrayList<ExcelModel> inputFormKeyboard() {
+        ArrayList<ExcelModel> listInput = new ArrayList<>();
+
+        while (true) {
+            if (listInput.size() > 0) {
+                Scanner sc = new Scanner(System.in);
+                System.out.println("Do you want to add more data? (Y/N)");
+                if (sc.nextLine().toLowerCase().equals("n")) {
+                    break;
+                }
+            }
+            ExcelModel item = inputAdd();
+            listInput.add(item);
+        }
+        return listInput;
+    }
+
+    public void exportDataFromDB(ArrayList<ExcelModel> listData) throws IOException {
+        System.out.println("Export data from DB.");
+        ExcelService excelService = new ExcelService();
+        excelService.exportDataFormStorage(listData);
+        return;
     }
 }
 

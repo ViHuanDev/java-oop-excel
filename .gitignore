@@ -37,3 +37,7 @@ build/
 ### Mac OS ###
 .DS_Store
 /.idea/
+/target/demoExcel-1.0-SNAPSHOT.jar
+/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+/target/maven-archiver/pom.properties
+/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
